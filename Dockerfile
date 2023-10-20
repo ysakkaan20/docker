@@ -3,8 +3,7 @@ FROM n8nio/n8n:1.10.0
 USER root
  
 RUN apk add --no-cache ffmpeg libreoffice
-ENV DB_POSTGRESDB_SSL_CA=$(pwd)/ca.crt
-ENV SSL=on
+ENV DB_POSTGRESDB_SSL_CA=ca.crt                                          
 ENV DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false
 ENV DB_TYPE=postgresdb
 ENV DB_POSTGRESDB_PORT=25060
