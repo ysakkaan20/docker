@@ -1,6 +1,4 @@
-FROM node:12.13.0-alpine
-
-ARG N8N_VERSION=1.10.0 
+FROM n8nio/n8n:1.10.0 
 
 RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
 
