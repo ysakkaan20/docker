@@ -5,8 +5,8 @@ USER root
 # Install new packages
 RUN apk add --no-cache ffmpeg libreoffice
 
-
+# Expose port (if needed)
 EXPOSE 5678
 
-# Define the command to start n8n
+# Start n8n
 CMD ["n8n"]
