@@ -1,20 +1,21 @@
-ARG NODE_VERSION=18
-FROM node:${NODE_VERSION}-alpine
+FROM node:12.13.0-alpine
 
-WORKDIR /home/node
-COPY .npmrc /usr/local/etc/npmrc
+ARG N8N_VERSION
 
-RUN \
-	apk add --update git openssh graphicsmagick tini tzdata ca-certificates libc6-compat && \
-	npm install -g npm@9.5.1 full-icu && \
-	rm -rf /var/cache/apk/* /root/.npm /tmp/* && \
-	# Install fonts
-	apk --no-cache add --virtual fonts msttcorefonts-installer fontconfig && \
-	update-ms-fonts && \
-	fc-cache -f && \
-	apk del fonts && \
-	find  /usr/share/fonts/truetype/msttcorefonts/ -type l -exec unlink {} \; && \
-	rm -rf /var/cache/apk/* /tmp/*
+RUN if [ -z "$N8N_VERSION" ] ; then echo "The N8N_VERSION argument is missing!" ; exit 1; fi
 
-ENV NODE_ICU_DATA /usr/local/lib/node_modules/full-icu
-EXPOSE 5678/tcp
+# Update everything and install needed dependencies
+RUN apk add --update graphicsmagick tzdata
+
+# # Set a custom user to not have n8n run as root
+USER root
+
+# Install n8n and the also temporary all the packages
+# it needs to build it correctly.
+RUN apk --update add --virtual build-dependencies python build-base ca-certificates && \
+	npm_config_user=root npm install -g n8n@${N8N_VERSION} && \
+	apk del build-dependencies
+
+WORKDIR /data
+
+CMD ["n8n"]
