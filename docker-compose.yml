@@ -1,0 +1,11 @@
+version: "3"
+services:
+  n8n-d360:
+    container_name: n8n-d360
+    build:
+      args:
+        N8N_VERSION: "1.10.0"
+    image: d360/n8n:latest
+    env_file: .env.local
+    ports:
+      - "5678:5678"
